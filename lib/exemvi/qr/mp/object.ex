@@ -717,14 +717,6 @@ defmodule Exemvi.QR.MP.Object do
   end
 
   @doc false
-  @deprecated "Not used outside unit tests"
-  def id_raw(template, id_atom) do
-    id_atoms(template)
-    |> Enum.find(fn {_, v} -> v == id_atom end)
-    |> elem(0)
-  end
-
-  @doc false
   def specs(:root) do
     @root_specs
   end

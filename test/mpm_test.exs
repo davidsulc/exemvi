@@ -119,7 +119,7 @@ defmodule MPMTest do
     assert Enum.count(objects) == 0
 
     payload = ""
-    {result, reasons} = MP.parse_to_objects(payload)
+    {result, objects} = MP.parse_to_objects(payload)
     assert result == :ok
     assert Enum.count(objects) == 0
   end
@@ -441,8 +441,7 @@ defmodule MPMTest do
   test "additional data template is parsed into objects" do
     with {:ok, objects} <- MP.parse_to_objects(@official_sample) do
 
-      id_62_raw = MPO.id_raw(:root, :additional_data_field_template)
-      object_62 = Enum.find(objects, fn x -> x.id == id_62_raw end)
+      object_62 = Enum.find(objects, fn x -> x.id == "62" end)
 
       assert object_62 != nil
       assert object_62.objects != nil
@@ -469,10 +468,7 @@ defmodule MPMTest do
   end
 
   test "additional data bill number is longer than 25 chars" do
-    code_62 = MPO.id_raw(:root, :additional_data_field_template)
-    code_01 = MPO.id_raw(:additional_data_field_template, :bill_number)
-
-    test_data = [%MPO{id: code_62, objects: [%MPO{id: code_01, value: String.duplicate("x", 26)}] }]
+    test_data = [%MPO{id: "62", objects: [%MPO{id: "01", value: String.duplicate("x", 26)}] }]
 
     {:error, reasons} = MP.validate_objects(test_data)
     assert Enum.member?(
@@ -481,10 +477,7 @@ defmodule MPMTest do
   end
 
   test "additional data mobile number is longer than 25 chars" do
-    code_62 = MPO.id_raw(:root, :additional_data_field_template)
-    code_02 = MPO.id_raw(:additional_data_field_template, :mobile_number)
-
-    test_data = [%MPO{id: code_62, objects: [%MPO{id: code_02, value: String.duplicate("x", 26) }] }]
+    test_data = [%MPO{id: "62", objects: [%MPO{id: "02", value: String.duplicate("x", 26) }] }]
 
     {:error, reasons} = MP.validate_objects(test_data)
     assert Enum.member?(
@@ -493,10 +486,7 @@ defmodule MPMTest do
   end
 
   test "additional data store label is longer than 25 chars" do
-    code_62 = MPO.id_raw(:root, :additional_data_field_template)
-    code_03 = MPO.id_raw(:additional_data_field_template, :store_label)
-
-    test_data = [%MPO{id: code_62, objects: [%MPO{id: code_03, value: String.duplicate("x", 26) }] }]
+    test_data = [%MPO{id: "62", objects: [%MPO{id: "03", value: String.duplicate("x", 26) }] }]
 
     {:error, reasons} = MP.validate_objects(test_data)
     assert Enum.member?(
@@ -505,10 +495,7 @@ defmodule MPMTest do
   end
 
   test "additional data loyalty number is longer than 25 chars" do
-    code_62 = MPO.id_raw(:root, :additional_data_field_template)
-    code_04 = MPO.id_raw(:additional_data_field_template, :loyalty_number)
-
-    test_data = [%MPO{id: code_62, objects: [%MPO{id: code_04, value: String.duplicate("x", 26) }] }]
+    test_data = [%MPO{id: "62", objects: [%MPO{id: "04", value: String.duplicate("x", 26) }] }]
 
     {:error, reasons} = MP.validate_objects(test_data)
     assert Enum.member?(
@@ -517,10 +504,7 @@ defmodule MPMTest do
   end
 
   test "additional data reference label is longer than 25 chars" do
-    code_62 = MPO.id_raw(:root, :additional_data_field_template)
-    code_05 = MPO.id_raw(:additional_data_field_template, :reference_label)
-
-    test_data = [%MPO{id: code_62, objects: [%MPO{id: code_05, value: String.duplicate("x", 26) }] }]
+    test_data = [%MPO{id: "62", objects: [%MPO{id: "05", value: String.duplicate("x", 26) }] }]
 
     {:error, reasons} = MP.validate_objects(test_data)
     assert Enum.member?(
@@ -529,10 +513,7 @@ defmodule MPMTest do
   end
 
   test "additional data customer label is longer than 25 chars" do
-    code_62 = MPO.id_raw(:root, :additional_data_field_template)
-    code_06 = MPO.id_raw(:additional_data_field_template, :customer_label)
-
-    test_data = [%MPO{id: code_62, objects: [%MPO{id: code_06, value: String.duplicate("x", 26) }] }]
+    test_data = [%MPO{id: "62", objects: [%MPO{id: "06", value: String.duplicate("x", 26) }] }]
 
     {:error, reasons} = MP.validate_objects(test_data)
     assert Enum.member?(
@@ -541,10 +522,7 @@ defmodule MPMTest do
   end
 
   test "additional data terminal label is longer than 25 chars" do
-    code_62 = MPO.id_raw(:root, :additional_data_field_template)
-    code_07 = MPO.id_raw(:additional_data_field_template, :terminal_label)
-
-    test_data = [%MPO{id: code_62, objects: [%MPO{id: code_07, value: String.duplicate("x", 26) }] }]
+    test_data = [%MPO{id: "62", objects: [%MPO{id: "07", value: String.duplicate("x", 26) }] }]
 
     {:error, reasons} = MP.validate_objects(test_data)
     assert Enum.member?(
@@ -553,10 +531,7 @@ defmodule MPMTest do
   end
 
   test "additional data purpose of transaction is longer than 25 chars" do
-    code_62 = MPO.id_raw(:root, :additional_data_field_template)
-    code_08 = MPO.id_raw(:additional_data_field_template, :purpose_of_transaction)
-
-    test_data = [%MPO{id: code_62, objects: [%MPO{id: code_08, value: String.duplicate("x", 26) }] }]
+    test_data = [%MPO{id: "62", objects: [%MPO{id: "08", value: String.duplicate("x", 26) }] }]
 
     {:error, reasons} = MP.validate_objects(test_data)
     assert Enum.member?(
@@ -565,13 +540,10 @@ defmodule MPMTest do
   end
 
   test "additional data consumer data request is invalid" do
-    code_62 = MPO.id_raw(:root, :additional_data_field_template)
-    code_09 = MPO.id_raw(:additional_data_field_template, :additional_consumer_data_request)
-
     test_data = [
-      [%MPO{id: code_62, objects: [%MPO{id: code_09, value: "AAA" }] }],
-      [%MPO{id: code_62, objects: [%MPO{id: code_09, value: "XYZ" }] }],
-      [%MPO{id: code_62, objects: [%MPO{id: code_09, value: "AMEA"}] }]
+      [%MPO{id: "62", objects: [%MPO{id: "09", value: "AAA" }] }],
+      [%MPO{id: "62", objects: [%MPO{id: "09", value: "XYZ" }] }],
+      [%MPO{id: "62", objects: [%MPO{id: "09", value: "AMEA"}] }]
     ]
 
     expected_error = Exemvi.Error.invalid_object_value(:additional_consumer_data_request)
@@ -659,9 +631,7 @@ defmodule MPMTest do
 
   test "merchant information language template is parsed into objects" do
     with {:ok, objects} <- MP.parse_to_objects(@official_sample) do
-
-      id_64_raw = MPO.id_raw(:root, :merchant_information_language_template)
-      object_64 = Enum.find(objects, fn x -> x.id == id_64_raw end)
+      object_64 = Enum.find(objects, fn x -> x.id == "64" end)
 
       assert object_64 != nil
       assert object_64.objects != nil
@@ -684,9 +654,7 @@ defmodule MPMTest do
   end
 
   test "merchant information language template language preference is missing" do
-    code_64 = MPO.id_raw(:root, :merchant_information_language_template)
-
-    test_data = [%MPO{id: code_64, objects: [%MPO{id: "01", value: "ABC" }]}]
+    test_data = [%MPO{id: "64", objects: [%MPO{id: "01", value: "ABC" }]}]
 
     {:error, reasons} = MP.validate_objects(test_data)
     assert Enum.member?(
@@ -695,12 +663,9 @@ defmodule MPMTest do
   end
 
   test "merchant information language template language preference is invalid" do
-    code_64 = MPO.id_raw(:root, :merchant_information_language_template)
-    code_00 = MPO.id_raw(:merchant_information_language_template, :language_preference)
-
     test_data = [
-      [%MPO{id: code_64, objects: [%MPO{id: code_00, value: "A"   }] }],
-      [%MPO{id: code_64, objects: [%MPO{id: code_00, value: "ABC" }] }]
+      [%MPO{id: "64", objects: [%MPO{id: "00", value: "A"   }] }],
+      [%MPO{id: "64", objects: [%MPO{id: "00", value: "ABC" }] }]
     ]
 
     expected_error = Exemvi.Error.invalid_object_value(:language_preference)
@@ -712,9 +677,7 @@ defmodule MPMTest do
   end
 
   test "merchant information language template merchant name alternate language is missing" do
-    code_64 = MPO.id_raw(:root, :merchant_information_language_template)
-
-    test_data = [%MPO{id: code_64, objects: [%MPO{id: "00", value: "EN" }]}]
+    test_data = [%MPO{id: "64", objects: [%MPO{id: "00", value: "EN" }]}]
 
     {:error, reasons} = MP.validate_objects(test_data)
     assert Enum.member?(
@@ -723,10 +686,7 @@ defmodule MPMTest do
   end
 
   test "merchant information language template merchant name alternate language is longer than 25 chars" do
-    code_64 = MPO.id_raw(:root, :merchant_information_language_template)
-    code_01 = MPO.id_raw(:merchant_information_language_template, :merchant_name_alternate_language)
-
-    test_data = [%MPO{id: code_64, objects: [%MPO{id: code_01, value: String.duplicate("x", 26) }]}]
+    test_data = [%MPO{id: "64", objects: [%MPO{id: "01", value: String.duplicate("x", 26) }]}]
 
     {:error, reasons} = MP.validate_objects(test_data)
     assert Enum.member?(
@@ -735,10 +695,7 @@ defmodule MPMTest do
   end
 
   test "merchant information language template merchant city alternate language is longer than 15 chars" do
-    code_64 = MPO.id_raw(:root, :merchant_information_language_template)
-    code_02 = MPO.id_raw(:merchant_information_language_template, :merchant_city_alternate_language)
-
-    test_data = [%MPO{id: code_64, objects: [%MPO{id: code_02, value: String.duplicate("x", 16) }]}]
+    test_data = [%MPO{id: "64", objects: [%MPO{id: "02", value: String.duplicate("x", 16) }]}]
 
     {:error, reasons} = MP.validate_objects(test_data)
     assert Enum.member?(
