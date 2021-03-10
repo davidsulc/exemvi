@@ -15,20 +15,20 @@ defmodule Exemvi.QR.MP do
   """
   def validate_qr(qr) do
 
-    qr_format_indicator = String.slice(qr, 0, 6)
+    qr = qr || ""
 
-    qr_length = String.length(qr)
-    without_checksum = String.slice(qr, 0, qr_length - 4)
-    qr_checksum = String.slice(qr, qr_length - 4, 4)
-    expected_checksum = Exemvi.CRC.checksum_hex(without_checksum)
-
-    all_ok = qr_format_indicator == "000201"
-    all_ok = all_ok and qr_checksum == expected_checksum
-
-    if all_ok do
+    with true <- String.length(qr) > 6,
+         qr_format_indicator = String.slice(qr, 0, 6),
+         true <- qr_format_indicator == "000201",
+         qr_length = String.length(qr),
+         without_checksum = String.slice(qr, 0, qr_length - 4),
+         qr_checksum = String.slice(qr, qr_length - 4, 4),
+         expected_checksum = Exemvi.CRC.checksum_hex(without_checksum),
+         true <- qr_checksum == expected_checksum
+    do
       {:ok, qr}
     else
-      {:error, [Exemvi.Error.invalid_qr]}
+      _ -> {:error, [Exemvi.Error.invalid_qr]}
     end
   end
 
@@ -48,6 +48,7 @@ defmodule Exemvi.QR.MP do
   - `{:error, reasons}` where `reasons` is a list of error reasons as atoms
   """
   def parse_to_objects(qr) do
+    qr = qr || ""
     case parse_to_objects_rest(:root, qr, []) do
       {:ok, objects} -> {:ok, objects}
       {:error, reasons} -> {:error, reasons}

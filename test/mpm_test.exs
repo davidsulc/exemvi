@@ -46,7 +46,7 @@ defmodule MPMTest do
     %MPO{id: "63", value: "A13A"}
   ]
 
-  test "basic usage of parsing and validation is successful" do
+  test "official sample pipe flow is successful" do
     {:ok, objects} = @official_sample
                      |> MP.validate_qr()
                      |> MP.parse_to_objects()
@@ -55,7 +55,7 @@ defmodule MPMTest do
     assert Enum.count(objects) > 0
   end
 
-  test "official sample qr parsing is successful" do
+  test "official sample qr code parsing is successful" do
     with {:ok, objects} <- MP.parse_to_objects(@official_sample)
     do
       # Check only some fields
@@ -80,20 +80,29 @@ defmodule MPMTest do
     end
   end
 
-  test "qr data length is not numeric" do
-    payload = "00A201"
-    {result, reasons} = MP.parse_to_objects(payload)
-    assert result == :error
-    assert Enum.member?(reasons, Exemvi.Error.invalid_value_length)
+  test "official data object sample is valid" do
+    test_data = @official_objects
+
+    {result, _} = MP.validate_objects(test_data)
+
+    assert result == :ok
   end
 
-  test "qr does not start with payload format indicator" do
+  test "validating nil or empty qr code" do
+    {:error, reasons} = MP.validate_qr(nil)
+    assert Enum.member?(reasons, Exemvi.Error.invalid_qr)
+
+    {:error, reasons} = MP.validate_qr("")
+    assert Enum.member?(reasons, Exemvi.Error.invalid_qr)
+  end
+
+  test "validating qr code that does not start with payload format indicator" do
     wrong_payload = "01" <> @official_sample
     {:error, reasons} = MP.validate_qr(wrong_payload)
     assert Enum.member?(reasons, Exemvi.Error.invalid_qr)
   end
 
-  test "qr checksum is invalid" do
+  test "validating invalid qr code checksum" do
     start_of_checksum = String.length(@official_sample) - 4
     without_checksum = String.slice(@official_sample, 0, start_of_checksum)
     wrong_checksum = "ABCD"
@@ -103,12 +112,23 @@ defmodule MPMTest do
     assert Enum.member?(reasons, Exemvi.Error.invalid_qr)
   end
 
-  test "official data object sample is valid" do
-    test_data = @official_objects
-
-    {result, _} = MP.validate_objects(test_data)
-
+  test "parsing nil or empty qr code" do
+    payload = nil
+    {result, objects} = MP.parse_to_objects(payload)
     assert result == :ok
+    assert Enum.count(objects) == 0
+
+    payload = ""
+    {result, reasons} = MP.parse_to_objects(payload)
+    assert result == :ok
+    assert Enum.count(objects) == 0
+  end
+
+  test "parsing non-numeric object data length" do
+    payload = "00A201"
+    {result, reasons} = MP.parse_to_objects(payload)
+    assert result == :error
+    assert Enum.member?(reasons, Exemvi.Error.invalid_value_length)
   end
 
   test "payload format indicator is missing" do
