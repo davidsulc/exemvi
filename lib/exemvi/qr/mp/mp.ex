@@ -2,6 +2,8 @@ defmodule Exemvi.QR.MP do
 
   alias Exemvi.QR.MP.Object, as: MPO
 
+  @spec validate_qr(String.t()) :: {:ok, String.t()} | {:error, [atom()]}
+
   @moduledoc """
   This module contains core functions for Merchant-Presented Mode QR Code
   """
@@ -32,6 +34,8 @@ defmodule Exemvi.QR.MP do
     end
   end
 
+  @spec parse_to_objects({:ok, String.t()} | {:error, [atom()]} | String.t()) :: {:ok, [%MPO{}]} | {:error, [atom()]}
+
   def parse_to_objects({:ok, qr}) do
     parse_to_objects(qr)
   end
@@ -54,6 +58,8 @@ defmodule Exemvi.QR.MP do
       {:error, reasons} -> {:error, reasons}
     end
   end
+
+  @spec validate_objects({:ok, [%MPO{}]} | {:error, [atom()]} | [%MPO{}]) :: {:ok, [%MPO{}]} | {:error, [atom()]}
 
   def validate_objects({:ok, objects}) do
     validate_objects(objects)
